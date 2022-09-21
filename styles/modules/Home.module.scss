@@ -37,12 +37,25 @@
 	gap: 50px;
 	grid-template-columns: repeat(3, 1fr);
 	list-style-type: none;
+	padding-bottom: 100px;
 
 	@media only screen and (max-width: 768px) {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
 	.track_item {
+		.track_item_image_wrapper {
+			position: relative;
+		}
+		.track_item_pos {
+			background-color: #000;
+			width: 100%;
+			bottom: 0;
+			left: 0;
+			z-index: 10;
+			font-size: 14px;
+			text-align: center;
+		}
 		img {
 			max-width: 100%;
 		}
@@ -51,6 +64,13 @@
 			p {
 				&:first-child {
 					font-size: 14px;
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+
+					i {
+						padding-left: 10px;
+					}
 				}
 
 				&:last-child {
@@ -70,7 +90,7 @@
 	50% {
 		//
 	}
-	
+
 	100% {
 		transform: rotate(0.5deg);
 		opacity: 0.5;

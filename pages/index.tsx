@@ -83,41 +83,53 @@ const Home: NextPage = (props) => {
 			<>
 				<AudioPlayer tracks={previews} onTracksIndexUpdate={onTracksIndexUpdate} tracksIndex={tracksIndex} />
 
-				{topTracks && (
-					<div className="container">
-						<div className={styles.wrapper}>
-							<p className="text-center">
-								Hey <b>{user.display_name}</b> ,
-							</p>
+				<div className="container">
+					<div className={styles.wrapper}>
+						<p>
+							Hey <b>{user.display_name}</b> ,
+						</p>
 
-							<p className="text-center">Here are your {topTracks.items.length} top tracks. Click on a track to play !</p>
+						{!topTracks && <p>Sorry, It looks like there is no information on your top tracks yet. Keep listening and try back again later.</p>}
 
-							<div>
-								<ul className={styles.track_list}>
-									{topTracks.items.map((t: SpotifyTrack, index: number) => {
-										return (
-											<li key={t.id} className={styles.track_item}>
-												<img
-													onClick={(e) => {
-														e.preventDefault();
-														setTracksIndex(index);
-													}}
-													className={tracksIndex === index ? styles.track_tile_thumb_active : styles.track_tile_thumb}
-													src={t.album.images[0].url}
-													alt=""
-												/>
-												<div className={styles.track_item_meta}>
-													<p>{t.name}</p>
-													<p>{t.album.artists[0].name}</p>
-												</div>
-											</li>
-										);
-									})}
-								</ul>
-							</div>
-						</div>
+						{topTracks && (
+							<>
+								<p>Here are your {topTracks.items.length} top tracks. Click on a track to play !</p>
+
+								<div>
+									<ul className={styles.track_list}>
+										{topTracks.items.map((t: SpotifyTrack, index: number) => {
+											return (
+												<li key={t.id} className={styles.track_item}>
+													<div className={styles.track_item_image_wrapper}>
+														<img
+															onClick={(e) => {
+																e.preventDefault();
+																setTracksIndex(index);
+															}}
+															className={tracksIndex === index ? styles.track_tile_thumb_active : styles.track_tile_thumb}
+															src={t.album.images[0].url}
+															alt=""
+														/>
+													</div>
+													<div className={styles.track_item_pos}>{index + 1}</div>
+													<div className={styles.track_item_meta}>
+														<p>
+															{t.name}{" "}
+															<a target="_blank" href={t.external_urls.spotify}>
+																<i className="bi bi-box-arrow-up-right"></i>
+															</a>
+														</p>
+														<p>{t.album.artists[0].name}</p>
+													</div>
+												</li>
+											);
+										})}
+									</ul>
+								</div>
+							</>
+						)}
 					</div>
-				)}
+				</div>
 			</>
 		</Layout>
 	);
