@@ -23,4 +23,4 @@ This application interacts with the spotify web api (https://developer.spotify.c
 -  Custom react audio player with volume control
 
 
-![preview](https://github.com/rorydevelop/spotifytoptracks/blob/master/preview.png?raw=true)
+![preview](https://github.com/rorydevelop/spotifytoptracks/blob/main/preview.png?raw=true)
