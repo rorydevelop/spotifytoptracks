@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import moment from "moment";
+import Login from "../pages/login";
 
 const AuthContext = createContext<any>({});
 
@@ -15,9 +16,7 @@ interface Props {
 
 export default function AuthProvider({ children }: Props) {
 	const router = useRouter();
-
 	const [loading, setLoading] = useState(true);
-
 	const [accessToken, setAccessToken] = useState<string | null>();
 	const [refreshToken, setRefreshToken] = useState<string | null>();
 	const [expires, setExpires] = useState<string | null>();
@@ -25,6 +24,7 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		const code = new URLSearchParams(window.location.search).get("code");
+
 		if (code) {
 			getToken(code).then((res) => {
 				setLoading(false);
@@ -34,12 +34,14 @@ export default function AuthProvider({ children }: Props) {
 		setAccessToken(localStorage.getItem("access_token"));
 		setExpires(localStorage.getItem("expires"));
 		setRefreshToken(localStorage.getItem("refresh_token"));
+		// @ts-ignore
+		setUser(JSON.parse(localStorage.getItem("user")));
 
 		setLoading(false);
 	}, []);
 
 	const login = async () => {
-		const { data } = await axios.post("/api/login");
+		const { data } = await axios.post("/api/auth/login");
 		router.replace(data.redirect);
 	};
 
@@ -50,27 +52,55 @@ export default function AuthProvider({ children }: Props) {
 			code,
 		});
 
-		try {
-			const { data } = await axios.get("/api/auth/callback/spotify?" + params);
+		axios
+			.get("/api/auth/callback?" + params)
+			.then(async ({ data }) => {
+				const resp = await axios.get("https://api.spotify.com/v1/me", {
+					headers: {
+						Authorization: "Bearer " + data.access_token,
+						"Content-Type": "application/json",
+					},
+				});
 
-			window.localStorage.setItem("access_token", data.access_token);
-			window.localStorage.setItem("refresh_token", data.access_token);
-			window.localStorage.setItem("expires", moment().add(data.expires_in, "seconds").toString());
+				const user = resp.data;
 
-			setLoading(false);
+				window.localStorage.setItem("access_token", data.access_token);
+				window.localStorage.setItem("refresh_token", data.refresh_token);
+				window.localStorage.setItem("expires", moment().add(data.expires_in, "seconds").toString());
+				window.localStorage.setItem("user", JSON.stringify(user));
 
-			router.replace("/");
-		} catch (error) {
-			setLoading(false);
-			console.log(error);
-		}
+				setAccessToken(localStorage.getItem("access_token"));
+				setExpires(localStorage.getItem("expires"));
+				setRefreshToken(localStorage.getItem("refresh_token"));
+				// @ts-ignore
+				setUser(JSON.parse(localStorage.getItem("user")));
+
+				router.push("/");
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.log(error, "error fetching access token");
+				setLoading(false);
+			});
 	};
 
-	// logout
 	const logout = async () => {
-		localStorage.removeItem("auth");
+		setLoading(true);
+
+		localStorage.removeItem("access_token");
+		localStorage.removeItem("refresh_token");
+		localStorage.removeItem("expires");
+		localStorage.removeItem("user");
+
 		setUser(null);
-		// const res = await HttpClient.get("/logout");
+		setAccessToken(null);
+		setExpires(null);
+		setRefreshToken(null);
+
+		router.reload();
+		router.replace("/");
+
+		setLoading(false);
 	};
 
 	const value = {
@@ -83,12 +113,23 @@ export default function AuthProvider({ children }: Props) {
 		logout,
 	};
 
-	return (
-		<AuthContext.Provider value={value}>
-			<>
-				{loading && <>Loading...</>}
-				{!loading && children}
-			</>
-		</AuthContext.Provider>
-	);
+	if (loading) {
+		return <>Loading...</>;
+	}
+
+	if (!loading && !user) {
+		return (
+			<AuthContext.Provider value={value}>
+				<Login />
+			</AuthContext.Provider>
+		);
+	}
+
+	if (!loading && user) {
+		return (
+			<AuthContext.Provider value={value}>
+				<>{children}</>
+			</AuthContext.Provider>
+		);
+	}
 }

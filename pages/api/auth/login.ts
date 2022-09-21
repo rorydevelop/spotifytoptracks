@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 interface Data {}
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-	var state = "dasdasdkkclasmdksl";
+	var state = "";
 	var scope = "user-read-private user-read-email user-top-read";
 
 	const params = new URLSearchParams({

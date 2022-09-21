@@ -4,6 +4,7 @@ import AuthProvider from "../context/AuthContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
+		// @ts-ignore
 		<AuthProvider>
 			<Component {...pageProps} />
 		</AuthProvider>

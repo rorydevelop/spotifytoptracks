@@ -1,0 +1,34 @@
+@import "./Variables.modules.scss";
+
+.wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	.icon {
+		i {
+			font-size: 1rem;
+		}
+	}
+
+	.blocks {
+		display: inline-flex;
+		border-radius: 10px;
+		overflow: hidden;
+		gap: 1px;
+		
+		.volume_block {
+			cursor: pointer;
+			background-color: $grey;
+			border: none;
+			padding: 4px 8px;
+		}
+
+        .volume_block_active {
+			cursor: pointer;
+			background-color: $green;
+			border: none;
+			padding: 4px 8px;
+		}
+	}
+}

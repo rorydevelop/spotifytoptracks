@@ -1,0 +1,88 @@
+@import "./Variables.modules.scss";
+
+.player_wrapper {
+	border: 1px solid #000;
+	backdrop-filter: blur(10px);
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-radius: 10px;
+	box-shadow: $box-shadow;
+	font-size: 14px;
+	overflow: hidden;
+	min-width: 300px;
+	max-width: 300px;
+	z-index: 100;
+
+	.meta {
+		p {
+			&:first-child {
+				font-size: 14px;
+			}
+
+			&:last-child {
+				font-size: 12px;
+				margin-bottom: 0px;
+			}
+		}
+	}
+
+	.player_inner {
+		padding: 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+	}
+
+	.player_footer {
+		display: flex;
+		justify-content: center;
+		padding-bottom: 5px;
+	}
+
+	.player_left {
+		width: 50%;
+	}
+
+	.player_right {
+		width: 40%;
+	}
+
+	.play_pause {
+		background-color: $black;
+		color: $white;
+		border: none;
+		padding: 5px;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		transition: $transition;
+		border-radius: 50%;
+
+		&:hover {
+			box-shadow: $box-shadow;
+			transition: $transition;
+		}
+	}
+
+	.progress {
+		height: 5px;
+		overflow: hidden;
+		width: 100%;
+		position: relative;
+		display: block;
+		background-color: $grey;
+		transition: $transition;
+
+		& > div.progress_elapsed {
+			background-color: $green;
+			height: 100%;
+			transition: $transition;
+		}
+	}
+}
