@@ -115,7 +115,7 @@ const Home: NextPage = (props) => {
 													<div className={styles.track_item_meta}>
 														<p>
 															{t.name}{" "}
-															<a target="_blank" href={t.external_urls.spotify}>
+															<a target="_blank" rel="noreferrer" href={t.external_urls.spotify}>
 																<i className="bi bi-box-arrow-up-right"></i>
 															</a>
 														</p>
