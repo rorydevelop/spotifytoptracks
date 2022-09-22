@@ -13,7 +13,7 @@ const Home: NextPage = (props) => {
 	/**
 	 * Hooks
 	 */
-	const { user } = useAuth();
+	const { user, logout } = useAuth();
 	const { getTopTracks } = useEndpoints();
 	const [topTracks, setTopTracks] = useState<{ items: SpotifyTrack[] } | null>();
 	const [previews, setPreviews] = useState<Array<Preview>>([]);
@@ -42,23 +42,28 @@ const Home: NextPage = (props) => {
 	 * @async
 	 */
 	const loadTracks = async () => {
-		const tracks = await getTopTracks();
-		const urls: Array<Preview> = [];
-
-		if (tracks) {
-			tracks.items.map((track: SpotifyTrack, index: number) => {
-				urls[index] = {
-					url: track.preview_url,
-					title: track.name,
-					artists: track.album.artists,
-				};
-			});
+		try {
+			const tracks = await getTopTracks();
+			
+			const urls: Array<Preview> = [];
+	
+			if (tracks) {
+				tracks.items.map((track: SpotifyTrack, index: number) => {
+					urls[index] = {
+						url: track.preview_url,
+						title: track.name,
+						artists: track.album.artists,
+					};
+				});
+			}
+	
+			setTopTracks(tracks);
+			setPreviews(urls);
+	
+			setLoading(false);
+		} catch (error) {
+			logout();
 		}
-
-		setTopTracks(tracks);
-		setPreviews(urls);
-
-		setLoading(false);
 	};
 
 	/**
