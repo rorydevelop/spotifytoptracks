@@ -1,20 +1,34 @@
 @import "./Variables.modules.scss";
 
 .wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-    button {
-        background-color: $green;
-        padding: 10px;
-        border: none;
-        cursor: pointer;
-        border-radius: 10px;
-    }
+	button {
+		background-color: $green;
+		padding: 10px;
+		border: none;
+		cursor: pointer;
+		border-radius: 10px;
+		text-transform: uppercase;
+	}
 
-    h1 {
-        margin-bottom: 20px;
-        text-align: center;
-    }
+	h1 {
+		margin-bottom: 20px;
+		text-align: center;
+	}
+}
+
+.auth_error {
+	padding: 20px;
+	max-width: 750px;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.login_button_wrapper {
+	padding: 10px 0px;
+	display: flex;
+	justify-content: center;
 }

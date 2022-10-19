@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, ElementType, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import moment from "moment";
@@ -21,6 +21,7 @@ export default function AuthProvider({ children }: Props) {
 	const [refreshToken, setRefreshToken] = useState<string | null>();
 	const [expires, setExpires] = useState<string | null>();
 	const [user, setUser] = useState<any>();
+	const [authError, setAuthError] = useState("");
 
 	useEffect(() => {
 		const code = new URLSearchParams(window.location.search).get("code");
@@ -79,7 +80,7 @@ export default function AuthProvider({ children }: Props) {
 				setLoading(false);
 			})
 			.catch((error) => {
-				console.log(error, "error fetching access token");
+				setAuthError(error.response.data);
 				setLoading(false);
 			});
 	};
@@ -120,10 +121,10 @@ export default function AuthProvider({ children }: Props) {
 	if (!loading && !user) {
 		return (
 			<AuthContext.Provider value={value}>
-				<Login />
+				<Login authError={authError} />
 			</AuthContext.Provider>
 		);
-	}
+	} 
 
 	if (!loading && user) {
 		return (
@@ -132,4 +133,6 @@ export default function AuthProvider({ children }: Props) {
 			</AuthContext.Provider>
 		);
 	}
+
+	return null;
 }
